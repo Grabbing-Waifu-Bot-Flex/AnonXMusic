@@ -2,13 +2,13 @@ import platform
 from sys import version as pyver
 
 import psutil
-from pyrogram import __version__ as pyrover
+from pyrogram import version as pyrover
 from pyrogram import filters
 from pyrogram.errors import MessageIdInvalid
 from pyrogram.types import InputMediaPhoto, Message
-from pytgcalls.__version__ import __version__ as pytgver
+from pytgcalls.version import version as pytgver
 
-import config
+import config  # Assuming your configuration is in a 'config.py' file
 from AnonXMusic import app
 from AnonXMusic.core.userbot import assistants
 from AnonXMusic.misc import SUDOERS, mongodb
@@ -18,16 +18,22 @@ from AnonXMusic.utils.decorators.language import language, languageCB
 from AnonXMusic.utils.inline.stats import back_stats_buttons, stats_buttons
 from config import BANNED_USERS
 
+# Assuming config.py contains:
+# VIDEO_PATH_URL = "https://example.com/your_video.mp4"
+
+# ... other configuration variables ...
+
+VIDEO_PATH_URL = "https://graph.org/file/0e41b21d2eeef47faf2df.mp4"  
 
 @app.on_message(filters.command(["stats", "gstats"]) & filters.group & ~BANNED_USERS)
 @language
 async def stats_global(client, message: Message, _):
     upl = stats_buttons(_, True if message.from_user.id in SUDOERS else False)
-    await message.reply_photo(
-        photo=config.STATS_IMG_URL,
+    await message.reply_video( # Use reply_video for video URLs
+        video=config.VIDEO_PATH_URL,
         caption=_["gstats_2"].format(app.mention),
         reply_markup=upl,
-    )
+    ) 
 
 
 @app.on_callback_query(filters.regex("stats_back") & ~BANNED_USERS)
